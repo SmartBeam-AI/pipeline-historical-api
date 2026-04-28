@@ -1,0 +1,1127 @@
+{
+  "info": {
+    "_postman_id": "5ac0e757-5137-482c-8b12-eef06b5f8a21",
+    "name": "Pump Lifecycle API",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "54333707",
+    "_collection_link": "https://go.postman.co/collection/54333707-5ac0e757-5137-482c-8b12-eef06b5f8a21?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Get data",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://52.66.231.9:8080/api/v1/health",
+          "protocol": "http",
+          "host": [
+            "52",
+            "66",
+            "231",
+            "9"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "health"
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Latest Readings",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Has columns array\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    pm.expect(data.columns).to.be.an(\"array\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Has rows\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    pm.expect(data.rows).to.be.an(\"array\");\r",
+              "    pm.expect(data.rows.length).to.be.greaterThan(0);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Row count matches rows array\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    pm.expect(data.row_count).to.eql(data.rows.length);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Default limit is 100\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    pm.expect(data.row_count).to.eql(100);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://52.66.231.9:8080/api/v1/latest",
+          "protocol": "http",
+          "host": [
+            "52",
+            "66",
+            "231",
+            "9"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "latest"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Test Data - Valid Pump",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Has rows\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    pm.expect(data.rows.length).to.be.greaterThan(0);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"All rows match pump_id\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    data.rows.forEach(function(row) {\r",
+              "        pm.expect(row.pump_id).to.eql(\"A250153/1507\");\r",
+              "    });\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://52.66.231.9:8080/api/v1/test-data?pump_id=A250153/1507",
+          "protocol": "http",
+          "host": [
+            "52",
+            "66",
+            "231",
+            "9"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "test-data"
+          ],
+          "query": [
+            {
+              "key": "pump_id",
+              "value": "A250153/1507"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Edge Cases - Slash in Pump ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Handles / in pump_id\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    if (data.row_count > 0) {\r",
+              "        pm.expect(data.rows[0].pump_id).to.eql(\"A250153/1506\");\r",
+              "    }\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://52.66.231.9:8080/api/v1/latest?pump_id=A250153/1506&limit=3",
+          "protocol": "http",
+          "host": [
+            "52",
+            "66",
+            "231",
+            "9"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "latest"
+          ],
+          "query": [
+            {
+              "key": "pump_id",
+              "value": "A250153/1506"
+            },
+            {
+              "key": "limit",
+              "value": "3"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Edge - Large Limit",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Returns data without error\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    pm.expect(data.rows).to.be.an(\"array\");\r",
+              "    pm.expect(data.row_count).to.be.at.most(10000);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://52.66.231.9:8080/api/v1/latest?limit=10000",
+          "protocol": "http",
+          "host": [
+            "52",
+            "66",
+            "231",
+            "9"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "latest"
+          ],
+          "query": [
+            {
+              "key": "limit",
+              "value": "10000"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Edge- Limit 1",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Exactly 1 row\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    pm.expect(data.row_count).to.eql(1);\r",
+              "    pm.expect(data.rows.length).to.eql(1);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://52.66.231.9:8080/api/v1/latest?limit=1",
+          "protocol": "http",
+          "host": [
+            "52",
+            "66",
+            "231",
+            "9"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "latest"
+          ],
+          "query": [
+            {
+              "key": "limit",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Test Data - Combined Filters",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"All filters applied\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    data.rows.forEach(function(row) {\r",
+              "        pm.expect(row.pump_id).to.eql(\"A250153/1507\");\r",
+              "        pm.expect(row.testbed).to.eql(1);\r",
+              "    });\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Max 5 rows\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    pm.expect(data.row_count).to.be.at.most(5);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://52.66.231.9:8080/api/v1/test-data?pump_id=A250153/1507&testbed=1&start=2026-04-13T00:00:00&end=2026-04-15T23:59:59&limit=5",
+          "protocol": "http",
+          "host": [
+            "52",
+            "66",
+            "231",
+            "9"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "test-data"
+          ],
+          "query": [
+            {
+              "key": "pump_id",
+              "value": "A250153/1507"
+            },
+            {
+              "key": "testbed",
+              "value": "1"
+            },
+            {
+              "key": "start",
+              "value": "2026-04-13T00:00:00"
+            },
+            {
+              "key": "end",
+              "value": "2026-04-15T23:59:59"
+            },
+            {
+              "key": "limit",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Test Data - Non-existent Pump",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Returns empty rows\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    pm.expect(data.row_count).to.eql(0);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://52.66.231.9:8080/api/v1/test-data?pump_id=DOESNOTEXIST",
+          "protocol": "http",
+          "host": [
+            "52",
+            "66",
+            "231",
+            "9"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "test-data"
+          ],
+          "query": [
+            {
+              "key": "pump_id",
+              "value": "DOESNOTEXIST"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Test Data - End Before Start",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Returns error message\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    pm.expect(data.error).to.include(\"end must not be before start\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://52.66.231.9:8080/api/v1/test-data?pump_id=A250153/1507&start=2026-12-01T00:00:00&end=2025-01-01T00:00:00",
+          "protocol": "http",
+          "host": [
+            "52",
+            "66",
+            "231",
+            "9"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "test-data"
+          ],
+          "query": [
+            {
+              "key": "pump_id",
+              "value": "A250153/1507"
+            },
+            {
+              "key": "start",
+              "value": "2026-12-01T00:00:00"
+            },
+            {
+              "key": "end",
+              "value": "2025-01-01T00:00:00"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Test Data - Time Order",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Rows ordered oldest first\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    for (var i = 0; i < data.rows.length - 1; i++) {\r",
+              "        var current = new Date(data.rows[i].time);\r",
+              "        var next = new Date(data.rows[i + 1].time);\r",
+              "        pm.expect(current.getTime()).to.be.at.most(next.getTime());\r",
+              "    }\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://52.66.231.9:8080/api/v1/test-data?pump_id=A250153/1507&limit=10",
+          "protocol": "http",
+          "host": [
+            "52",
+            "66",
+            "231",
+            "9"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "test-data"
+          ],
+          "query": [
+            {
+              "key": "pump_id",
+              "value": "A250153/1507"
+            },
+            {
+              "key": "limit",
+              "value": "10"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Test Data - Time Range",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"All rows within time range\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    var start = new Date(\"2026-04-13T00:00:00Z\");\r",
+              "    var end = new Date(\"2026-04-15T23:59:59Z\");\r",
+              "    data.rows.forEach(function(row) {\r",
+              "        var t = new Date(row.time);\r",
+              "        pm.expect(t.getTime()).to.be.at.least(start.getTime());\r",
+              "        pm.expect(t.getTime()).to.be.at.most(end.getTime());\r",
+              "    });\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://52.66.231.9:8080/api/v1/test-data?pump_id=A250153/1507&start=2026-04-13T00:00:00&end=2026-04-15T23:59:59",
+          "protocol": "http",
+          "host": [
+            "52",
+            "66",
+            "231",
+            "9"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "test-data"
+          ],
+          "query": [
+            {
+              "key": "pump_id",
+              "value": "A250153/1507"
+            },
+            {
+              "key": "start",
+              "value": "2026-04-13T00:00:00"
+            },
+            {
+              "key": "end",
+              "value": "2026-04-15T23:59:59"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Latest Reading - Time Order",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Rows ordered newest first\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    for (var i = 0; i < data.rows.length - 1; i++) {\r",
+              "        var current = new Date(data.rows[i].time);\r",
+              "        var next = new Date(data.rows[i + 1].time);\r",
+              "        pm.expect(current.getTime()).to.be.at.least(next.getTime());\r",
+              "    }\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://52.66.231.9:8080/api/v1/latest?limit=5",
+          "protocol": "http",
+          "host": [
+            "52",
+            "66",
+            "231",
+            "9"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "latest"
+          ],
+          "query": [
+            {
+              "key": "limit",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Latest Readings - Non Existent Pump",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Returns empty rows, no error\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    pm.expect(data.rows).to.be.an(\"array\");\r",
+              "    pm.expect(data.row_count).to.eql(0);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://52.66.231.9:8080/api/v1/latest?pump_id=DOESNOTEXIST",
+          "protocol": "http",
+          "host": [
+            "52",
+            "66",
+            "231",
+            "9"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "latest"
+          ],
+          "query": [
+            {
+              "key": "pump_id",
+              "value": "DOESNOTEXIST"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Latest Readings - Testbed",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"All rows match testbed\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    data.rows.forEach(function(row) {\r",
+              "        pm.expect(row.testbed).to.eql(1);\r",
+              "    });\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://52.66.231.9:8080/api/v1/latest?testbed=1&limit=5",
+          "protocol": "http",
+          "host": [
+            "52",
+            "66",
+            "231",
+            "9"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "latest"
+          ],
+          "query": [
+            {
+              "key": "testbed",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Latest Reading - Pump Id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"All rows match pump_id\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    data.rows.forEach(function(row) {\r",
+              "        pm.expect(row.pump_id).to.eql(\"A250177/1457\");\r",
+              "    });\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://52.66.231.9:8080/api/v1/latest?pump_id=A250177/1457&limit=7",
+          "protocol": "http",
+          "host": [
+            "52",
+            "66",
+            "231",
+            "9"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "latest"
+          ],
+          "query": [
+            {
+              "key": "pump_id",
+              "value": "A250177/1457"
+            },
+            {
+              "key": "limit",
+              "value": "7"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Latest - Pump Id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"All rows match pump_id\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    data.rows.forEach(function(row) {\r",
+              "        pm.expect(row.pump_id).to.eql(\"A250153/1507\");\r",
+              "    });\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://52.66.231.9:8080/api/v1/latest?pump_id=A250153/1507&limit=5",
+          "protocol": "http",
+          "host": [
+            "52",
+            "66",
+            "231",
+            "9"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "latest"
+          ],
+          "query": [
+            {
+              "key": "pump_id",
+              "value": "A250153/1507"
+            },
+            {
+              "key": "limit",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Latest Reading - Offset",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Returns exactly 10 rows\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    pm.expect(data.row_count).to.eql(10);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Rows are different from first page\", function() {\r",
+              "    // Store first row time to compare with offset=0 results\r",
+              "    var data = pm.response.json();\r",
+              "    var firstRowTime = data.rows[0].time;\r",
+              "    // With offset=8, the first row here should NOT be the newest row in the table\r",
+              "    pm.expect(data.rows.length).to.eql(10);\r",
+              "    pm.expect(firstRowTime).to.be.a(\"string\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Time ordered newest first\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    for (var i = 0; i < data.rows.length - 1; i++) {\r",
+              "        var current = new Date(data.rows[i].time);\r",
+              "        var next = new Date(data.rows[i + 1].time);\r",
+              "        pm.expect(current.getTime()).to.be.at.least(next.getTime());\r",
+              "    }\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://52.66.231.9:8080/api/v1/latest?limit=10&offset=8",
+          "protocol": "http",
+          "host": [
+            "52",
+            "66",
+            "231",
+            "9"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "latest"
+          ],
+          "query": [
+            {
+              "key": "limit",
+              "value": "10"
+            },
+            {
+              "key": "offset",
+              "value": "8",
+              "type": "text"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Latest Readings - limit",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Returns exactly 8 rows\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    pm.expect(data.row_count).to.eql(8);\r",
+              "    pm.expect(data.rows.length).to.eql(8);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://52.66.231.9:8080/api/v1/latest?limit=8",
+          "protocol": "http",
+          "host": [
+            "52",
+            "66",
+            "231",
+            "9"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "latest"
+          ],
+          "query": [
+            {
+              "key": "limit",
+              "value": "8"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://52.66.231.9:8080/api/v1/health",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function() {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Status is ok\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    pm.expect(data.status).to.eql(\"ok\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"DB is connected\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    pm.expect(data.db_connected).to.eql(true);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Has timestamp\", function() {\r",
+              "    var data = pm.response.json();\r",
+              "    pm.expect(data.timestamp).to.be.a(\"string\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://52.66.231.9:8080/api/v1/health",
+          "protocol": "http",
+          "host": [
+            "52",
+            "66",
+            "231",
+            "9"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "health"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

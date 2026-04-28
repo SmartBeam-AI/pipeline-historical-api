@@ -31,7 +31,7 @@ async def health_check():
 
 @router.get("/latest")
 async def latest_readings(
-    pump_id: Optional[str] = Query(None, description="Filter by pump ID"),
+    pump_id: str = Query(..., description="Pump ID (required)"),
     testbed: Optional[int] = Query(None, description="Filter by testbed"),
     limit: int = Query(100, ge=1, le=10000, description="Number of rows to return"),
     offset: int = Query(0, ge=0, description="Rows to skip for pagination"),
